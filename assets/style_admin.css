@@ -1,0 +1,182 @@
+/* Reset & Body Style */
+body {
+    font-family: sans-serif;
+    margin: 0;
+    background-color: #f4f7f6;
+}
+
+/* Layout Utama */
+.dashboard-container {
+    display: flex;
+    height: 100vh;
+    overflow: hidden;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 250px;
+    background-color: #343a40;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    flex-shrink: 0;
+    transition: width 0.3s ease, padding 0.3s ease;
+}
+
+.sidebar.closed {
+    width: 0;
+    padding: 20px 0;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.sidebar-header h2 {
+    margin: 0;
+    color: white;
+}
+
+.sidebar-menu {
+    flex-grow: 1;
+}
+
+.sidebar-menu a {
+    display: block;
+    color: #adb5bd;
+    text-decoration: none;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    white-space: nowrap;
+}
+
+.sidebar-menu a:hover,
+.sidebar-menu a.active {
+    background-color: #495057;
+    color: white;
+}
+
+.logout-link {
+    text-align: center;
+    padding-top: 20px;
+    border-top: 1px solid #495057;
+    white-space: nowrap;
+}
+
+.logout-link a {
+    color: #dc3545;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+/* Konten Utama */
+.main-content {
+    flex-grow: 1;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+}
+
+.sidebar-toggle {
+    position: absolute;
+    top: 25px;
+    left: 20px;
+    background: #f8f9fa;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 20px;
+    padding: 5px 10px;
+    z-index: 1000;
+}
+
+h1, h2, h3 {
+    color: #333;
+}
+
+/* Style untuk Tombol Umum */
+.btn {
+    display: inline-block;
+    padding: 10px 15px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+.btn-secondary { background-color: #6c757d; }
+.btn-success { background-color: #28a745; }
+.btn-danger { background-color: #dc3545; }
+
+
+/* Tabel */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: white;
+}
+
+th, td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Link Aksi di Tabel */
+.actions a {
+    margin-right: 10px;
+    text-decoration: none;
+    font-weight: bold;
+}
+.actions a.edit { color: #28a745; }
+.actions a.delete { color: #dc3545; }
+
+/* Notifikasi */
+.alert {
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+}
+.alert.success { background-color: #28a745; }
+
+/* Style untuk Label Status (Baru & Lengkap) */
+.status {
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: white;
+    font-weight: bold;
+    text-align: center;
+    font-size: 12px;
+    text-transform: uppercase;
+    display: inline-block;
+}
+.status.diajukan {
+    background-color: #ffc107; /* Kuning */
+    color: #212529; /* Teks hitam agar lebih terbaca */
+}
+.status.disetujui-atasan {
+    background-color: #17a2b8; /* Biru-Tosca */
+}
+.status.ditolak-atasan {
+    background-color: #fd7e14; /* Oranye */
+}
+.status.disetujui-ketua {
+    background-color: #28a745; /* Hijau Final */
+}
+.status.ditolak-ketua {
+    background-color: #dc3545; /* Merah Final */
+}
