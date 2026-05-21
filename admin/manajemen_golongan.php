@@ -1,10 +1,8 @@
 <?php 
-// Variabel ini digunakan oleh header.php untuk judul halaman dan menandai menu aktif
 $page_title = "Manajemen Golongan";
 $current_page = "golongan";
 include 'header.php'; 
 
-// Query untuk mengambil semua data golongan
 $query = "SELECT * FROM golongan ORDER BY id DESC";
 $result = mysqli_query($koneksi, $query);
 ?>
@@ -15,7 +13,6 @@ $result = mysqli_query($koneksi, $query);
 <hr>
 
 <?php
-// Tampilkan pesan sukses jika ada
 if (isset($_SESSION['pesan'])) {
     echo "<div class='alert success'>" . $_SESSION['pesan'] . "</div>";
     unset($_SESSION['pesan']);

@@ -77,6 +77,7 @@ body {
 /* Menu di Sidebar */
 .sidebar-menu {
   flex-grow: 1;
+  overflow-y: auto;
 }
 
 .sidebar-menu a {
@@ -144,6 +145,7 @@ h3 {
 }
 .btn-secondary {
   background-color: #6c757d;
+  text-align: center;
 }
 
 /* Tabel */
@@ -319,4 +321,136 @@ th {
   padding: 10px 15px;
   margin-bottom: 20px;
   border-radius: 4px;
+}
+
+/* Style tambahan untuk Form */
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+.form-group input[type="text"],
+.form-group input[type="tel"],
+.form-group input[type="date"],
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+.btn-group {
+  margin-top: 20px;
+  display: flex;
+  gap: 10px;
+}
+.btn-group .btn,
+.btn-group button {
+  flex: 1;
+}
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+.btn-secondary {
+  background-color: #6c757d;
+}
+.info-cuti {
+  background-color: #e2f3f5;
+  border-left: 5px solid #17a2b8;
+  padding: 10px 15px;
+  margin: 20px 0;
+  border-radius: 4px;
+}
+
+/* Style Scrollbar Transparan Modern */
+/* Untuk Chrome, Safari, Edge, Opera */
+::-webkit-scrollbar {
+  width: 8px; /* Lebar scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; /* Membuat track/jalur scrollbar tidak terlihat */
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3); /* Handle scroll yang semi-transparan */
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(
+    0,
+    0,
+    0,
+    0.5
+  ); /* Handle scroll menjadi lebih gelap saat disorot */
+}
+
+/* Untuk Firefox */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+/* Style untuk Submenu */
+.sidebar-menu a.has-submenu::after {
+  content: " \25BC"; /* Panah ke bawah */
+  font-size: 0.7em;
+  float: right;
+}
+.sidebar-menu div a.submenu-item {
+  background-color: #343a40;
+  padding-left: 30px; /* Sedikit menjorok ke dalam */
+  font-size: 0.9em;
+}
+.sidebar-menu div a.submenu-item:hover {
+  background-color: #5a6268;
+}
+.sidebar-menu div a.submenu-item.active {
+  background-color: #495057;
+  color: white;
+}
+
+/* Style untuk Header Konten dan Notifikasi Pegawai */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+#sidebar-toggle {
+  position: static; /* Hapus posisi absolut agar rapi */
+}
+.notification-area {
+  position: relative;
+}
+.notification-bell {
+  font-size: 24px;
+  color: #555;
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+}
+.notification-badge {
+  position: absolute;
+  top: -5px;
+  right: -10px;
+  background-color: #dc3545; /* Merah */
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: bold;
+  border: 1px solid white;
 }

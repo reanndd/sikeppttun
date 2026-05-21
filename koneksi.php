@@ -1,7 +1,7 @@
 <?php
 $host = 'localhost';
 $user = 'root';
-$pass = ''; // Sesuaikan dengan password XAMPP Anda
+$pass = '';
 $db   = 'db_sikep_pttun';
 
 $koneksi = mysqli_connect($host, $user, $pass, $db);

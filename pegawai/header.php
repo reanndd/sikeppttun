@@ -19,12 +19,27 @@ $pegawai_info = mysqli_fetch_assoc($result_pegawai_info);
 $query_cek_atasan = "SELECT COUNT(id) as jumlah_bawahan FROM pegawai WHERE id_atasan = '$id_pegawai'";
 $result_cek_atasan = mysqli_query($koneksi, $query_cek_atasan);
 $is_atasan = (mysqli_fetch_assoc($result_cek_atasan)['jumlah_bawahan'] > 0);
+// --- BLOK BARU UNTUK MENGHITUNG NOTIFIKASI ATASAN LANGSUNG ---
+$notif_count = 0;
+if ($is_atasan) {
+    // Atasan Langsung menghitung pengajuan dari bawahan yang statusnya 'Diajukan'
+    $id_atasan_session = $_SESSION['id_pegawai'];
+    $query_notif = "SELECT COUNT(pc.id) as total 
+                    FROM pengajuan_cuti pc 
+                    JOIN pegawai p ON pc.id_pegawai = p.id 
+                    WHERE p.id_atasan = '$id_atasan_session' AND pc.status = 'Diajukan'";
+    $result_notif = mysqli_query($koneksi, $query_notif);
+    if ($result_notif) {
+        $notif_count = mysqli_fetch_assoc($result_notif)['total'];
+    }
+}
+// --- AKHIR BLOK BARU ---
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title><?php echo isset($page_title) ? $page_title : 'Dasbor'; ?> - SIKEP</title>
+    <title><?php echo isset($page_title) ? $page_title : 'Dashboard'; ?> - SIKEP</title>
     <link rel="stylesheet" href="../assets/style_pegawai.css">
 </head>
 
@@ -40,10 +55,12 @@ $is_atasan = (mysqli_fetch_assoc($result_cek_atasan)['jumlah_bawahan'] > 0);
                 <h3><?php echo htmlspecialchars($pegawai_info['nama_lengkap']); ?></h3>
             </div>
             <nav class="sidebar-menu">
-                <a href="index.php" class="<?php if ($current_page == 'dashboard') echo 'active'; ?>">Dasbor Saya</a>
+                <a href="index.php" class="<?php if ($current_page == 'dashboard') echo 'active'; ?>">Dashboard</a>
                 <a href="ajukan_cuti.php" class="<?php if ($current_page == 'ajukan_cuti') echo 'active'; ?>">Buat Pengajuan Cuti</a>
+
                 <?php if ($is_atasan): ?>
-                    <a href="persetujuan_atasan.php" class="<?php if ($current_page == 'persetujuan') echo 'active'; ?>">Persetujuan Bawahan</a>
+                    <a href="persetujuan_atasan.php" class=" <?php if ($current_page == 'persetujuan_atasan') echo 'active'; ?>">Persetujuan Bawahan</a>
+                    <a href="riwayat_persetujuan.php" class=" <?php if ($current_page == 'riwayat_persetujuan') echo 'active'; ?>">Riwayat Persetujuan</a>
                 <?php endif; ?>
             </nav>
             <div class="bottom-menu">
@@ -53,4 +70,16 @@ $is_atasan = (mysqli_fetch_assoc($result_cek_atasan)['jumlah_bawahan'] > 0);
         </div>
 
         <div id="main-content" class="main-content">
-            <button id="sidebar-toggle">&#9776;</button>
+            <div class="main-header">
+                <button id="sidebar-toggle">&#9776;</button>
+                <?php if ($is_atasan): // Lonceng hanya muncul jika dia atasan 
+                ?>
+                    <div class="notification-area">
+                        <a href="persetujuan_atasan.php" class="notification-bell">
+                            &#128276; <?php if ($notif_count > 0): ?>
+                                <span class="notification-badge"><?php echo $notif_count; ?></span>
+                            <?php endif; ?>
+                        </a>
+                    </div>
+                <?php endif; ?>
+            </div>

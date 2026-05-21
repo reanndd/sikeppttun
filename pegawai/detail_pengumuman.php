@@ -40,7 +40,7 @@ if(!$pengumuman) {
         <?php echo nl2br(htmlspecialchars($pengumuman['isi'])); ?>
     </div>
     <br>
-    <a href="index.php" class="btn btn-secondary">Kembali ke Dasbor</a>
+    <a href="index.php" class="btn btn-secondary">Kembali ke Dashboard</a>
 </div>
 
 

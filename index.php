@@ -64,6 +64,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
 
+        .login-logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .login-logo img {
+            max-width: 100px;
+            height: auto;
+        }
+
         h1 {
             text-align: center;
             color: #333;
@@ -120,25 +130,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <body>
     <div class="container">
-        <h1>LOGIN SIKEP</h1>
-        <hr>
-        <?php if (!empty($error)): ?>
-            <div class="message error"><?php echo $error; ?></div>
-        <?php endif; ?>
-        <form action="index.php" method="POST">
-            <div class="form-group">
-                <label for="username">Username</label>
-                <input type="text" id="username" name="username" required>
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
-            <div class="btn-group">
-                <button type="submit" class="btn btn-primary">Login</button>
-            </div>
-        </form>
-    </div>
+        <div class="login-logo">
+            <img src="assets/logo.png" alt="Logo">
+            <h1>Login</h1>
+            <hr>
+            <?php if (!empty($error)): ?>
+                <div class="message error"><?php echo $error; ?></div>
+            <?php endif; ?>
+            <form action="index.php" method="POST">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
 </body>
 
 </html>

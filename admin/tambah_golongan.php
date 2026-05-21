@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 ?>
 
 <h1>Tambah Golongan Baru</h1>
-<p>Masukkan nama Pangkat/Golongan Ruang yang baru.</p>
+<p>Masukkan nama Pangkat/Golongan yang baru.</p>
 <hr>
 
 <?php

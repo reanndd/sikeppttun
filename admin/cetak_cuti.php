@@ -124,30 +124,41 @@ $pdf->Cell(190, 15, '', 'LRB', 1);
 $pdf->Ln(5);
 
 // --- BAGIAN VI ---
-$pdf->SetFont('Arial', 'B', 9);
+$pdf->SetFont('Arial','B',9);
 $pdf->Cell(190, 6, 'VI. ALAMAT SELAMA MENJALANKAN CUTI', 1, 1, 'L');
-$pdf->SetFont('Arial', '', 9);
+$pdf->SetFont('Arial','',9);
+
+// Simpan posisi Y awal
 $y_pos = $pdf->GetY();
-$pdf->Cell(120, 25, '', 'LRB', 0);
-$pdf->Cell(70, 25, '', 'RB', 1);
+
+// Gambar kotak luar
+$pdf->Cell(120, 30, '', 'LRB', 0); // Kotak kiri untuk alamat
+$pdf->Cell(70, 30, '', 'RB', 1);  // Kotak kanan untuk TTD
+
+// Isi Alamat di kotak kiri
 $pdf->SetXY(11, $y_pos + 1);
 $pdf->MultiCell(118, 4.5, $data['alamat_cuti'], 0, 'L');
-$pdf->SetXY(130, $y_pos + 1);
+$pdf->SetXY(130, $y_pos + 1); // Pindah ke kotak kanan
 $pdf->Cell(70, 5, 'Telp/Hp : ' . $data['no_telp_cuti'], 0, 1, 'L');
-$pdf->SetXY(130, $y_pos + 7);
+
+// Isi TTD di kotak kanan
+$pdf->SetXY(130, $y_pos + 8); // Turunkan sedikit untuk 'Hormat Saya'
 $pdf->Cell(70, 5, 'Hormat Saya,', 0, 1, 'C');
-// PERBAIKAN: Gunakan variabel $pemohon
+
+// Logika untuk menampilkan gambar TTD pemohon
 $ttd_pemohon_path = '../uploads/ttd/' . ($pemohon['ttd_image'] ?? '');
 if (!empty($pemohon['ttd_image']) && file_exists($ttd_pemohon_path)) {
-    $pdf->Image($ttd_pemohon_path, 145, $y_pos + 11, 40, 15);
+    // Atur posisi gambar TTD
+    $pdf->Image($ttd_pemohon_path, 145, $y_pos + 12, 40, 15);
 }
-$pdf->SetXY(130, $y_pos + 20);
-$pdf->SetFont('Arial', 'U', 9);
+
+// Atur posisi nama dan NIP di bawah TTD
+$pdf->SetXY(130, $y_pos + 25); 
+$pdf->SetFont('Arial','U',9); 
 $pdf->Cell(70, 5, $pemohon['nama_lengkap'], 0, 1, 'C');
-$pdf->SetXY(130, $y_pos + 25);
-$pdf->SetFont('Arial', '', 9);
+$pdf->SetXY(130, $y_pos + 30); 
+$pdf->SetFont('Arial','',9); 
 $pdf->Cell(70, 5, 'NIP. ' . $pemohon['nip'], 0, 1, 'C');
-$pdf->Ln(5);
 
 // --- BAGIAN VII & VIII ---
 $pdf->SetFont('Arial', 'B', 9);

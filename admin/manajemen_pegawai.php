@@ -1,10 +1,10 @@
-<?php 
+<?php
 // 1. Definisikan variabel untuk judul halaman dan menu aktif
 $page_title = "Manajemen Pegawai";
 $current_page = "pegawai";
 
 // 2. Panggil file header.php (yang berisi semua CSS)
-include 'header.php'; 
+include 'header.php';
 
 // 3. Query untuk mengambil data pegawai
 $query_pegawai_list = "SELECT p.id, p.nama_lengkap, p.nip, j.nama_jabatan, g.nama_golongan 
@@ -20,7 +20,6 @@ $result_pegawai_list = mysqli_query($koneksi, $query_pegawai_list);
 ?>
 
 <h1>Manajemen Pegawai</h1>
-<p>Halaman ini digunakan untuk mengelola data seluruh pegawai.</p>
 <hr>
 
 <?php
@@ -48,12 +47,12 @@ if (isset($_SESSION['pesan'])) {
             <th>Nama Lengkap</th>
             <th>NIP</th>
             <th>Jabatan</th>
-            <th>Pangkat/Gol</th>
+            <th>Golongan</th>
             <th>Aksi</th>
         </tr>
     </thead>
     <tbody>
-        <?php 
+        <?php
         $no = 1;
         if (mysqli_num_rows($result_pegawai_list) > 0) {
             while ($data = mysqli_fetch_assoc($result_pegawai_list)) {
@@ -80,7 +79,7 @@ if (isset($_SESSION['pesan'])) {
     </tbody>
 </table>
 
-<?php 
+<?php
 // 4. Panggil file footer.php
-include 'footer.php'; 
+include 'footer.php';
 ?>

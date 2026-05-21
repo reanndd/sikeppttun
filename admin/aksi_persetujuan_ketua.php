@@ -24,27 +24,55 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $query_update = null;
 
     if ($status_baru == 'Disetujui Ketua') {
-        // Jika disetujui, simpan ID Ketua dan tanggal persetujuan
-        $query_update = "UPDATE pengajuan_cuti SET 
-                            status = '$status_baru', 
-                            catatan_ketua = '$catatan',
-                            disetujui_oleh_ketua_id = '$id_ketua_session',
-                            tanggal_disetujui_ketua = NOW()
-                         WHERE id = '$id_cuti'";
-    } elseif ($status_baru == 'Ditolak Ketua') {
-        // Jika ditolak, cukup update status dan catatan
-        $query_update = "UPDATE pengajuan_cuti SET 
-                            status = '$status_baru', 
-                            catatan_ketua = '$catatan'
-                         WHERE id = '$id_cuti'";
-    }
+        // Jika disetujui, lakukan proses pengurangan jatah cuti jika perlu
 
-    if ($query_update && mysqli_query($koneksi, $query_update)) {
-        $_SESSION['pesan'] = "Persetujuan final cuti berhasil diproses.";
-        header('Location: manajemen_cuti.php');
-        exit();
+        // Ambil detail pengajuan untuk mendapatkan jenis cuti, tanggal, dan id pegawai
+        $q_detail = mysqli_query($koneksi, "SELECT * FROM pengajuan_cuti WHERE id = '$id_cuti'");
+        $data_cuti = mysqli_fetch_assoc($q_detail);
+
+        // Proses hanya jika jenisnya 'Cuti Tahunan'
+        if ($data_cuti['jenis_cuti'] == 'Cuti Tahunan') {
+            $start = new DateTime($data_cuti['tanggal_mulai']);
+            $end = new DateTime($data_cuti['tanggal_selesai']);
+            $durasi = $end->diff($start)->format("%a") + 1;
+            $id_pegawai = $data_cuti['id_pegawai'];
+            $tahun = date('Y', strtotime($data_cuti['tanggal_mulai']));
+
+            // Query untuk mengurangi jatah cuti
+            $query_kurangi_jatah = "UPDATE jatah_cuti SET 
+                                    cuti_diambil = cuti_diambil + $durasi, 
+                                    sisa_cuti = sisa_cuti - $durasi 
+                                WHERE id_pegawai = '$id_pegawai' AND tahun = '$tahun'";
+            mysqli_query($koneksi, $query_kurangi_jatah);
+        }
+
+        // Setelah itu, baru update status pengajuan cutinya sendiri
+        $query_update_status = "UPDATE pengajuan_cuti SET 
+                                status = '$status_baru', 
+                                catatan_ketua = '$catatan',
+                                disetujui_oleh_ketua_id = '$id_ketua_session',
+                                tanggal_disetujui_ketua = NOW()
+                            WHERE id = '$id_cuti'";
+
+        if (mysqli_query($koneksi, $query_update_status)) {
+            $_SESSION['pesan'] = "Persetujuan final cuti berhasil diproses dan jatah cuti telah diperbarui.";
+            header('Location: manajemen_cuti.php');
+            exit();
+        } else {
+            $error = "Gagal memperbarui status pengajuan.";
+        }
+    } elseif ($status_baru == 'Ditolak Ketua') {
+        // Jika ditolak, cukup update statusnya saja tanpa mengurangi jatah
+        $query_update_status = "UPDATE pengajuan_cuti SET status = '$status_baru', catatan_ketua = '$catatan' WHERE id = '$id_cuti'";
+        if (mysqli_query($koneksi, $query_update_status)) {
+            $_SESSION['pesan'] = "Persetujuan final cuti (Ditolak) berhasil diproses.";
+            header('Location: manajemen_cuti.php');
+            exit();
+        } else {
+            $error = "Gagal memperbarui status pengajuan.";
+        }
     } else {
-        $error = "Aksi tidak valid atau gagal memperbarui data.";
+        $error = "Aksi tidak valid.";
     }
 }
 

@@ -60,26 +60,6 @@ if (!$cuti) {
 <head>
     <title>Proses Persetujuan Cuti - SIKEP</title>
     <style>
-        body {
-            font-family: sans-serif;
-            background-color: #f4f7f6;
-            margin: 20px;
-        }
-
-        .container {
-            width: 80%;
-            margin: auto;
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-        }
-
-        h1,
-        h3 {
-            color: #333;
-        }
-
         table {
             width: 100%;
             border-collapse: collapse;

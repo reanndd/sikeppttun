@@ -6,13 +6,14 @@ $current_page = "ajukan_cuti";
 // 2. Panggil header (yang berisi layout sidebar dan CSS)
 include 'header.php';
 
-// Ambil sisa cuti tahunan
+// Ambil sisa cuti tahunan untuk tahun ini
 $tahun_sekarang = date('Y');
-$sisa_cuti_tahunan = 0;
+$sisa_cuti_tahunan = 0; // Default jika jatah belum di-generate
 $query_sisa_cuti = "SELECT sisa_cuti FROM jatah_cuti WHERE id_pegawai = '{$_SESSION['id_pegawai']}' AND tahun = '$tahun_sekarang'";
 $result_sisa_cuti = mysqli_query($koneksi, $query_sisa_cuti);
 if (mysqli_num_rows($result_sisa_cuti) > 0) {
-    $sisa_cuti_tahunan = mysqli_fetch_assoc($result_sisa_cuti)['sisa_cuti'];
+    $data_sisa_cuti = mysqli_fetch_assoc($result_sisa_cuti);
+    $sisa_cuti_tahunan = $data_sisa_cuti['sisa_cuti'];
 }
 
 $error = '';
@@ -25,32 +26,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $alamat_cuti = mysqli_real_escape_string($koneksi, $_POST['alamat_cuti']);
     $no_telp_cuti = mysqli_real_escape_string($koneksi, $_POST['no_telp_cuti']);
 
-    // Validasi tanggal
+    // Validasi Tanggal
     if (strtotime($tanggal_selesai) < strtotime($tanggal_mulai)) {
         $error = "Error: Tanggal selesai tidak boleh sebelum tanggal mulai.";
     } else {
-        $valid = true;
-        if ($jenis_cuti == 'Cuti Tahunan') {
-            $start = new DateTime($tanggal_mulai);
-            $end = new DateTime($tanggal_selesai);
-            $diff = $end->diff($start)->format("%a") + 1;
-            if ($diff > $sisa_cuti_tahunan) {
-                $error = "Jatah cuti tahunan Anda tidak mencukupi. Sisa cuti Anda: " . $sisa_cuti_tahunan . " hari.";
-                $valid = false;
-            }
-        }
+        // Validasi Input Kosong
+        if (!empty($jenis_cuti) && !empty($tanggal_mulai) && !empty($tanggal_selesai) && !empty($keterangan)) {
 
-        if ($valid) {
-            $id_pegawai = $_SESSION['id_pegawai'];
-            $query_insert = "INSERT INTO pengajuan_cuti (id_pegawai, jenis_cuti, tanggal_mulai, tanggal_selesai, keterangan, alamat_cuti, no_telp_cuti, status) 
-                             VALUES ('$id_pegawai', '$jenis_cuti', '$tanggal_mulai', '$tanggal_selesai', '$keterangan', '$alamat_cuti', '$no_telp_cuti', 'Diajukan')";
-            if (mysqli_query($koneksi, $query_insert)) {
-                $_SESSION['pesan'] = "Pengajuan cuti Anda berhasil dikirim.";
-                header('Location: index.php');
-                exit();
-            } else {
-                $error = "Gagal mengirim pengajuan: " . mysqli_error($koneksi);
+            $valid = true; // Anggap pengajuan valid pada awalnya
+
+            // Validasi hanya untuk Cuti Tahunan
+            if ($jenis_cuti == 'Cuti Tahunan') {
+                // Hitung durasi cuti yang diajukan
+                $start = new DateTime($tanggal_mulai);
+                $end = new DateTime($tanggal_selesai);
+                $diff = $end->diff($start)->format("%a") + 1;
+
+                // Bandingkan dengan sisa cuti
+                if ($diff > $sisa_cuti_tahunan) {
+                    $error = "Jatah cuti tahunan Anda tidak mencukupi. Sisa cuti Anda: " . $sisa_cuti_tahunan . " hari.";
+                    $valid = false; // Set menjadi tidak valid jika jatah kurang
+                }
             }
+
+            // Hanya jalankan INSERT jika semua validasi lolos
+            if ($valid) {
+                $id_pegawai = $_SESSION['id_pegawai'];
+                $query_insert = "INSERT INTO pengajuan_cuti (id_pegawai, jenis_cuti, tanggal_mulai, tanggal_selesai, keterangan, alamat_cuti, no_telp_cuti, status)
+                                 VALUES ('$id_pegawai', '$jenis_cuti', '$tanggal_mulai', '$tanggal_selesai', '$keterangan', '$alamat_cuti', '$no_telp_cuti', 'Diajukan')";
+
+                if (mysqli_query($koneksi, $query_insert)) {
+                    $_SESSION['pesan'] = "Pengajuan cuti Anda berhasil dikirim.";
+                    header('Location: index.php');
+                    exit();
+                } else {
+                    $error = "Gagal mengirim pengajuan: " . mysqli_error($koneksi);
+                }
+            }
+        } else {
+            $error = "Semua kolom yang ditandai * wajib diisi.";
         }
     }
 }
@@ -122,6 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         return true;
     }
 </script>
+
 <?php
 // 3. Panggil footer
 include 'footer.php';
